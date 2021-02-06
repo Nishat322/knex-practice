@@ -1,0 +1,23 @@
+Prediction of the order of the tests that will be run in the temp.spec.js file
+
+Temporary spec- top level describe
+before #1
+before #2
+beforeEach #2
+it #4
+beforeEach #2
+it #5
+    Describe #1
+before $3
+beforeEach #2
+it #1
+afterEach #1
+    Describe #2
+before #4
+beforeEach #2
+it #3
+afterEach #1
+after #2
+after #1
+
+
