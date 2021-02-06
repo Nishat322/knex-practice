@@ -43,7 +43,7 @@ function searchByProduceName(searchTerm){
             console.log(result);
         });
 }
-//searchByProduceName('holo');
+searchByProduceName('holo');
 
 /*
 Pagination for page one (to determine offset multiply page-1 by 10)
@@ -65,7 +65,7 @@ function paginateProducts(page) {
         console.log(result);
       });
   }
-  //paginateProducts(2);
+paginateProducts(2);
 
 /*
 Filter products that have images (column is not null) 
@@ -88,7 +88,7 @@ function getProductsWithImages(){
         });
 }
 
-//getProductsWithImages();
+getProductsWithImages();
 
 /*
 To find the most popular video the SQL query is 
