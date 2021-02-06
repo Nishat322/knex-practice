@@ -65,5 +65,29 @@ function paginateProducts(page) {
         console.log(result);
       });
   }
-  paginateProducts(2);
+  //paginateProducts(2);
+
+/*
+Filter products that have images (column is not null) 
+    We cannot use image != NULL in our query because it would return every row 
+    SQL NULL gets special treatment and two NULL values cannot be equivalent so we use IS NOT NULL operator 
+Query 
+    SELECT product_id, name, price, category, image
+        FROM amazong_products
+        WHERE image IS NOT NULL;  
+    in knex we use .whereNotNull() method and then supply a column name
+*/
+
+function getProductsWithImages(){
+    knexInstance
+        .select('product_id', 'name', 'price', 'category', 'image')
+        .from('amazong_products')
+        .whereNotNull('image')
+        .then(result => {
+            console.log(result);
+        });
+}
+
+//getProductsWithImages();
+
 
