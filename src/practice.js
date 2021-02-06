@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable indent */
 'use strict';
 require('dotenv').config();

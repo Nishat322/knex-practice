@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable indent */
 'use strict';
 require('dotenv').config();
@@ -45,7 +46,7 @@ function getItemAfterDate(daysAgo){
         .where(
             'date_added',
             '>',
-            knexInstance.raw(`now() - '?? days':: INTERVAL`, daysAgo)
+            knexInstance.raw('now() - \'?? days\':: INTERVAL', daysAgo)
         )
         .then(result => {
             console.log(result);
