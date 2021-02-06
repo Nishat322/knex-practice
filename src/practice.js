@@ -43,6 +43,27 @@ function searchByProduceName(searchTerm){
             console.log(result);
         });
 }
-searchByProduceName('holo');
+//searchByProduceName('holo');
 
+/*
+Pagination for page one (to determine offset multiply page-1 by 10)
+show ten products at a time on a single page. 
+    SELECT product_id, name, price, category
+        FROM amazong_products
+    LIMIT 10
+        OFFSET 0;
+*/
+function paginateProducts(page) {
+    const productsPerPage = 10;
+    const offset = productsPerPage * (page - 1);
+    knexInstance
+      .select('product_id', 'name', 'price', 'category')
+      .from('amazong_products')
+      .limit(productsPerPage)
+      .offset(offset)
+      .then(result => {
+        console.log(result);
+      });
+  }
+  paginateProducts(2);
 
