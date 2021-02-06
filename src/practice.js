@@ -90,4 +90,37 @@ function getProductsWithImages(){
 
 //getProductsWithImages();
 
+/*
+To find the most popular video the SQL query is 
+    SELECT video_name, region, count(date_viewed) AS views
+    FROM whopipe_video_views
+        WHERE date_viewed > (now() - '30 days'::INTERVAL)
+    GROUP BY video_name, region
+    ORDER BY region ASC, views DESC;
+    - Select by video_name and region --> use the count function to count the dates viewed --> rename this function using AS to views
+    - group by video_name and by region 
+    - sort result by region and order by count 
+    use the WHERE filter to only see results within the last 30 days 
+*/
+function mostPopularVideosForDays(days){
+    knexInstance
+        .select('video_name','region')
+        .count('date_viewed AS views')
+        .where(
+            'date_viewed',
+            '>',
+            knexInstance.raw('now() - \'?? days\'::INTERVAL', days)//we use the raw method because knex does not have this method.
+            //?? is used to indicate where the userinput will be contained (this is a prepared statement and prepared statements are a security measure to prevent SQL injection)
+        )
+        .from('whopipe_video_views')
+        .groupBy('video_name', 'region')
+        .orderBy([
+            {column: 'region', order: 'ASC'},
+            {column: 'views', order: 'DESC'},
+        ])
+        .then(result => {
+            console.log(result);
+        });
+}
 
+mostPopularVideosForDays(30);
