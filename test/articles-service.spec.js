@@ -43,7 +43,7 @@ describe('Articles service object', function(){
 
     //contex and describe serve the same function we oonly use context here for semantic reasons 
     context('Given \'blogful_articles\' has data', () => {
-        before(() => {
+        beforeEach(() => {
             return db   
                 .into('blogful_articles')
                 .insert(testArticles);
@@ -55,6 +55,59 @@ describe('Articles service object', function(){
                     expect(actual).to.eql(testArticles);
                 });
         });
+        it('getById() resolves an article by id from \'blogful_articles\' table', () => {
+            const thirdId = 3;
+            const thirdTestArticle = testArticles[thirdId -1];
+            return ArticlesService.getById(db, thirdId)
+                .then(actual => {
+                    expect(actual).to.eql({
+                        id: thirdId,
+                        title: thirdTestArticle.title,
+                        content: thirdTestArticle.content,
+                        date_published: thirdTestArticle.date_published,
+                    });
+                });
+        });
+        it('deleteArticle() removes an article by id from \'blogful_articles\' table', () => {
+            const articleId = 3;
+            return ArticlesService.deleteArticle(db, articleId)
+                .then(() => ArticlesService.getAllArticles(db))
+                .then(allArticles => {[
+                    {
+                        id: 1,
+                        date_published: new Date('2029-01-22T16:28:32.615Z'),
+                        title: 'First test post!',
+                        content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?'
+                    },
+                    {
+                        id: 2,
+                        date_published: new Date('2100-05-22T16:28:32.615Z'),
+                        title: 'Second test post!',
+                        content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum, exercitationem cupiditate dignissimos est perspiciatis, nobis commodi alias saepe atque facilis labore sequi deleniti. Sint, adipisci facere! Velit temporibus debitis rerum.'
+                    },
+                ];
+                    const expected = testArticles.filter(article => article.id !== articleId);
+                    expect(allArticles).to.eql(expected);
+                });
+        });
+        it('updateArticle() updates an article from the \'blogful_articles\' table', () => {
+            const idOfArticleToUpdate = 3;
+            const newArticleData = {
+                title: 'updated title',
+                content: 'updated context',
+                date_published: new Date(),
+            };
+            return ArticlesService.updateArticle(db, idOfArticleToUpdate, newArticleData)
+                .then(() => ArticlesService.getById(db, idOfArticleToUpdate))
+                .then(article => {
+                    expect(article).to.eql({
+                        id: idOfArticleToUpdate,
+                        title: newArticleData.title,
+                        content: newArticleData.content,
+                        date_published: newArticleData.date_published
+                    });
+                });
+        });
     });
     
     context('Given \'blogful_articles\' has no data', ()=> {
@@ -62,6 +115,22 @@ describe('Articles service object', function(){
             return ArticlesService.getAllArticles(db)
                 .then(actual => {
                     expect(actual).to.eql([]);
+                });
+        });
+        it('insertArticle() inserts an article and resolves the article with an \'id\'', () => {
+            const newArticle = {
+                title: 'Test new title',
+                content: 'Test new content',
+                date_published: new Date('2029-01-22T16:28:32.615Z'),
+            };
+            return ArticlesService.insertArticle(db, newArticle)
+                .then(actual => {
+                    expect(actual).to.eql({
+                        id: 1,
+                        title: newArticle.title,
+                        content: newArticle.content,
+                        date_published: newArticle.date_published,
+                    });
                 });
         });
     });
